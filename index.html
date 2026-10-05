@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管樂團團員專屬售票系統 ｜ 大東文化藝術中心演藝廳</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 圖示庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- 自訂象牙白與大地土色調選位樣式 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen bg-[#faf8f5] text-[#292524] flex flex-col selection:bg-amber-800 selection:text-white">
+
+  <!-- ================= 頂端導覽列 ================= -->
+  <header class="sticky top-0 z-40 bg-[#fffdfa]/95 backdrop-blur-md border-b border-[#e7dfd5] shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#a84c2e] to-[#d97706] flex items-center justify-center text-white shadow-md shadow-amber-900/15">
+          <i class="fas fa-music text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#292524] flex items-center gap-2">
+            管樂團公演・團員專屬選位系統
+            <span class="hidden sm:inline-block text-[11px] px-2 py-0.5 rounded bg-[#f4ede4] border border-[#d6cbbe] text-[#78716c] font-normal">
+              大東演藝廳
+            </span>
+          </h1>
+          <p class="text-xs text-[#78716c]">大東文化藝術中心演藝廳（高雄市鳳山區光遠路161號）</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- 查詢 / 取消訂單按鈕 -->
+        <button id="btn-open-search" class="px-3 py-1.5 rounded-lg bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#4a3728] text-xs font-bold border border-[#d6cbbe] flex items-center gap-1.5 transition-all shadow-sm">
+          <i class="fas fa-magnifying-glass text-[#a84c2e]"></i>
+          <span>查詢 / 取消訂單</span>
+        </button>
+
+        <!-- 重新整理按鈕 -->
+        <button id="btn-sync-seats" class="px-2.5 py-1.5 rounded-lg bg-[#fffdfa] hover:bg-[#f4ede4] text-[#78716c] hover:text-[#292524] text-xs font-medium border border-[#e7dfd5] flex items-center gap-1.5 transition-all shadow-sm" title="重新整理最新席位狀態">
+          <i id="sync-icon" class="fas fa-arrows-rotate"></i>
+          <span class="hidden sm:inline">重新整理狀態</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 主內容區塊 ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-4 sm:py-6 flex flex-col gap-5">
+
+    <!-- 1. 團員專屬優惠公告欄（大地土色高雅卡片） -->
+    <section class="bg-[#fffdfa] border border-[#e7dfd5] rounded-2xl p-4 sm:p-5 shadow-sm relative overflow-hidden">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="px-2.5 py-1 rounded-md bg-[#fdf2e9] text-[#b45309] border border-[#fed7aa] text-xs font-bold flex items-center gap-1.5">
+          <i class="fas fa-bullhorn text-[#d97706]"></i> 團員購票專屬優惠
+        </span>
+        <span class="text-xs text-[#78716c]">點選座位後，系統會自動套用最優惠組合試算</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- 優惠 1 -->
+        <div class="bg-[#faf8f5] border border-[#e7dfd5] rounded-xl p-3 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-sky-100 text-[#0284c7] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+            1
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-[#0369a1]">團員首 2 張免費</h4>
+            <p class="text-xs text-[#57534e] mt-0.5 leading-relaxed">
+              每位團員享有 <span class="text-[#0284c7] font-bold underline">2 張免費</span> 的 300 元座位（系統自動優先折抵為 $0 元）。
+            </p>
+          </div>
+        </div>
+
+        <!-- 優惠 2 -->
+        <div class="bg-[#faf8f5] border border-[#e7dfd5] rounded-xl p-3 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-amber-100 text-[#b45309] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+            2
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-[#b45309]">其餘位置一律 7 折</h4>
+            <p class="text-xs text-[#57534e] mt-0.5 leading-relaxed">
+              超出贈票之 300 元席及所有高價位席次一律 <span class="text-[#b45309] font-bold">打 7 折</span>！<span class="text-[#78716c]">（註：2樓 100 元席無折扣）</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- 優惠 3 -->
+        <div class="bg-[#faf8f5] border border-[#e7dfd5] rounded-xl p-3 flex items-start gap-3">
+          <div class="w-7 h-7 rounded-lg bg-pink-100 text-[#db2777] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+            3
+          </div>
+          <div>
+            <h4 class="text-xs sm:text-sm font-bold text-[#be185d]">包含精美節目冊</h4>
+            <p class="text-xs text-[#57534e] mt-0.5 leading-relaxed">
+              購買 <span class="text-[#be185d] font-bold">1000 元</span> 或 <span class="text-[#b45309] font-bold">500 元</span> 之座位，每席皆隨票贈送節目冊乙本！
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 圖例說明區 (Legend) 與 視野縮放工具列 -->
+    <section class="flex flex-wrap items-center justify-between gap-3 bg-[#fffdfa] p-3 rounded-xl border border-[#e7dfd5]">
+      
+      <!-- 圖例標籤 -->
+      <div class="flex flex-wrap items-center gap-3 sm:gap-5 text-xs">
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-pink-600 shadow-sm"></div>
+          <span class="font-semibold text-[#292524]">$1000 元席</span>
+          <span class="text-[11px] text-[#be185d]">(7折 $700+節目冊)</span>
+          <span id="stat-remain-1000" class="text-[10px] text-[#78716c]"></span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-amber-500 shadow-sm"></div>
+          <span class="font-semibold text-[#292524]">$500 元席</span>
+          <span class="text-[11px] text-[#b45309]">(7折 $350+節目冊)</span>
+          <span id="stat-remain-500" class="text-[10px] text-[#78716c]"></span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-sky-600 shadow-sm"></div>
+          <span class="font-semibold text-[#292524]">$300 元席</span>
+          <span class="text-[11px] text-[#0284c7]">(前2張免費，後7折 $210)</span>
+          <span id="stat-remain-300" class="text-[10px] text-[#78716c]"></span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-emerald-600 shadow-sm"></div>
+          <span class="font-semibold text-[#292524]">$100 元席</span>
+          <span class="text-[11px] text-[#059669]">(2樓無折扣)</span>
+          <span id="stat-remain-100" class="text-[10px] text-[#78716c]"></span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-red-800 flex items-center justify-center text-[9px] text-red-100 font-bold">✕</div>
+          <span class="font-semibold text-rose-800">攝影席 (不開放)</span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-stone-300 text-stone-600 flex items-center justify-center text-[10px]">✕</div>
+          <span class="text-[#78716c]">已售出 / 已保留</span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <div class="w-3.5 h-3.5 rounded bg-[#c25e3d] border border-amber-300 shadow-sm"></div>
+          <span class="font-bold text-[#a84c2e]">您選取的座位</span>
+        </div>
+      </div>
+
+      <!-- 畫面縮放控制 -->
+      <div class="flex items-center gap-1 text-xs">
+        <span class="text-[#78716c] mr-1 hidden sm:inline"><i class="fas fa-magnifying-glass"></i> 縮放：</span>
+        <button id="btn-zoom-out" class="w-7 h-7 rounded bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#4a3728] border border-[#d6cbbe] flex items-center justify-center font-bold" title="縮小">
+          <i class="fas fa-minus"></i>
+        </button>
+        <button id="btn-zoom-reset" class="px-2 h-7 rounded bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#4a3728] border border-[#d6cbbe] flex items-center justify-center font-mono font-medium" title="重設縮放">
+          100%
+        </button>
+        <button id="btn-zoom-in" class="w-7 h-7 rounded bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#4a3728] border border-[#d6cbbe] flex items-center justify-center font-bold" title="放大">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- 3. 視覺化選位主畫布（一二三樓垂直整合於同一視窗） -->
+    <div class="seating-viewport shadow-md">
+      <div id="pan-zoom-target" class="seating-pan-zoom py-6">
+        <div id="seating-container">
+          <!-- 由 js/app.js 動態渲染全館 1樓、2樓、3樓整合座位 -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= 懸停詳細資訊卡 Tooltip ================= -->
+  <div id="seat-tooltip"></div>
+
+  <!-- ================= 底部懸浮購物車與結帳列 ================= -->
+  <aside class="sticky bottom-0 z-30 bg-[#fffdfa]/95 backdrop-blur-md border-t border-[#e7dfd5] shadow-[0_-8px_25px_rgba(74,55,40,0.08)]">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+
+        <!-- 左側：已選座位標籤群 -->
+        <div class="w-full md:w-auto flex-1">
+          <div class="flex items-center justify-between md:justify-start gap-2 mb-1.5">
+            <span class="text-xs font-bold text-[#292524] flex items-center gap-1.5">
+              <i class="fas fa-cart-shopping text-[#a84c2e]"></i> 已選購座席清單
+              <span class="px-2 py-0.2 rounded-full bg-[#c25e3d] text-white text-[11px]" id="cart-count">0</span>
+            </span>
+            <button id="btn-clear-selection" class="text-xs text-rose-700 hover:text-rose-800 underline font-medium">
+              清空全部
+            </button>
+          </div>
+
+          <div id="selected-seats-list" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
+            <span class="text-xs text-[#78716c] italic">尚未點選座位，請於上方座位表點擊選位</span>
+          </div>
+        </div>
+
+        <!-- 右側：折扣試算與按鈕 -->
+        <div class="w-full md:w-auto flex flex-wrap sm:flex-nowrap items-center justify-between md:justify-end gap-3 sm:gap-5 border-t md:border-t-0 pt-2 md:pt-0 border-[#e7dfd5]">
+          <!-- 金額詳細拆解 -->
+          <div class="flex items-center gap-3 text-right">
+            <div>
+              <div class="text-[11px] text-[#78716c]">
+                原價合計: <span id="cart-original-total" class="line-through text-[#78716c] font-mono">$0</span>
+              </div>
+              <div class="text-[11px] text-[#059669] font-medium">
+                團員優惠: <span id="cart-discount-saved" class="font-mono">-$0</span>
+              </div>
+            </div>
+
+            <div class="border-l border-[#e7dfd5] pl-3">
+              <div class="text-xs text-[#78716c]">實付總額</div>
+              <div id="cart-final-total" class="text-xl sm:text-2xl font-black text-[#a84c2e] font-mono tracking-tight">$0</div>
+            </div>
+
+            <div class="border-l border-[#e7dfd5] pl-3">
+              <div class="text-[11px] text-[#78716c]">附贈節目冊</div>
+              <div id="cart-booklets" class="text-sm font-bold text-[#be185d] font-mono">0 本</div>
+            </div>
+          </div>
+
+          <!-- 下一步結帳按鈕 -->
+          <button id="btn-checkout" disabled class="btn-terracotta w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+            <span>下一步：填寫團員資料</span>
+            <i class="fas fa-chevron-right text-xs"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= 填寫團員資料彈窗 (Checkout Modal) ================= -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm modal-overlay">
+    <div class="bg-[#fffdfa] border border-[#e7dfd5] rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl relative modal-content max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-[#e7dfd5] pb-3 mb-4">
+        <h3 class="text-base sm:text-lg font-bold text-[#292524] flex items-center gap-2">
+          <i class="fas fa-clipboard-list text-[#a84c2e]"></i> 確認選位與填寫團員資料
+        </h3>
+        <button data-close-modal="checkout-modal" class="text-[#78716c] hover:text-[#292524] text-xl font-bold">
+          &times;
+        </button>
+      </div>
+
+      <!-- 訂單摘要預覽卡 -->
+      <div class="bg-[#faf8f5] rounded-xl p-3.5 border border-[#e7dfd5] mb-4 text-xs space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">選取座席：</span>
+          <span id="modal-summary-seats" class="text-[#a84c2e] font-bold max-w-[260px] text-right truncate"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">總席位數：</span>
+          <span id="modal-summary-count" class="text-[#292524] font-semibold"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">原價合計：</span>
+          <span id="modal-summary-original" class="text-[#78716c] line-through"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">團員優惠折抵：</span>
+          <span id="modal-summary-discount" class="text-[#059669] font-bold"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">贈送精美節目冊：</span>
+          <span id="modal-summary-booklets" class="text-[#be185d] font-bold"></span>
+        </div>
+        <div class="flex justify-between text-sm font-bold border-t border-[#e7dfd5] pt-2">
+          <span class="text-[#292524]">實付應收金額：</span>
+          <span id="modal-summary-final" class="text-[#a84c2e] font-black text-base font-mono"></span>
+        </div>
+
+        <ul id="modal-discount-breakdown" class="text-[11px] text-[#78716c] pt-1 space-y-0.5 border-t border-[#e7dfd5]/80">
+        </ul>
+      </div>
+
+      <!-- 團員資料表單 -->
+      <form id="checkout-form" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-name">
+            團員姓名 <span class="text-rose-600">*</span>
+          </label>
+          <input type="text" id="member-name" required placeholder="例如：王小明" class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-section">
+            所屬聲部 / 樂器 <span class="text-rose-600">*</span>
+          </label>
+          <select id="member-section" required class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-email">
+            電子信箱 (Email) <span class="text-rose-600">*（必填，供後續查核與取消訂單）</span>
+          </label>
+          <input type="email" id="member-email" required placeholder="例如：member@example.com" class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-phone">
+            聯絡電話 (手機) <span class="text-rose-600">*</span>
+          </label>
+          <input type="tel" id="member-phone" required placeholder="例如：0912-345-678" class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-line">
+            LINE ID (選填，方便票務聯繫)
+          </label>
+          <input type="text" id="member-line" placeholder="例如：line_user123" class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#292524] mb-1" for="member-notes">
+            備註需求 (選填，例如特殊輪椅席需求等)
+          </label>
+          <textarea id="member-notes" rows="2" placeholder="有任何其他需求可在此填寫..." class="w-full bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-sm text-[#292524] focus:outline-none focus:border-[#a84c2e]"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" data-close-modal="checkout-modal" class="px-4 py-2 rounded-lg text-xs font-medium bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#57534e]">
+            返回修改選位
+          </button>
+          <button type="submit" id="btn-submit-order" class="btn-terracotta px-5 py-2 rounded-lg text-xs font-bold shadow-md">
+            確認送出訂單
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= ⚠️ 劃位衝突警示彈窗 (Conflict Alert Modal) ================= -->
+  <div id="conflict-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/70 backdrop-blur-sm modal-overlay">
+    <div class="bg-[#fffdfa] border-2 border-rose-300 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center">
+      
+      <div class="w-14 h-14 rounded-full bg-rose-100 text-rose-600 mx-auto flex items-center justify-center text-2xl mb-3 shadow-md animate-bounce">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+
+      <h3 class="text-lg font-bold text-stone-900 mb-1">⚠️ 席次已被搶先登記！</h3>
+      <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+        抱歉！您選取的以下席次，在填寫表單期間剛好已被其他團員搶先一步送出登記：
+      </p>
+
+      <div id="conflict-seats-list" class="py-2.5 px-3 bg-rose-50 rounded-xl border border-rose-200 mb-4 flex flex-wrap justify-center gap-1.5">
+        <!-- 衝突座位標籤 -->
+      </div>
+
+      <div class="bg-[#faf8f5] p-3 rounded-xl border border-[#e7dfd5] text-xs text-stone-600 text-left mb-5 space-y-1">
+        <div class="font-bold text-stone-800">📌 系統處理說明：</div>
+        <div>1. 為了保障劃位公平性，系統已<span class="text-rose-700 font-bold">自動取消您剛才這筆送出</span>。</div>
+        <div>2. 被搶走的座位已在地圖上即時標記為灰色已售出。</div>
+        <div>3. 請點擊下方按鈕，重新挑選其他空位後再次送出即可。</div>
+      </div>
+
+      <button data-close-modal="conflict-modal" class="w-full py-2.5 rounded-xl bg-[#c25e3d] hover:bg-[#a84c2e] text-white font-bold text-xs shadow-md transition-all">
+        我知道了，重新挑選其他座位
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= 🔍 查詢與取消訂單彈窗 (Search & Cancel Modal) ================= -->
+  <div id="search-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm modal-overlay">
+    <div class="bg-[#fffdfa] border border-[#e7dfd5] rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-[#e7dfd5] pb-3 mb-4">
+        <h3 class="text-base sm:text-lg font-bold text-[#292524] flex items-center gap-2">
+          <i class="fas fa-magnifying-glass text-[#a84c2e]"></i> 檢索已訂位資訊 / 取消訂位
+        </h3>
+        <button data-close-modal="search-modal" class="text-[#78716c] hover:text-[#292524] text-xl font-bold">
+          &times;
+        </button>
+      </div>
+
+      <p class="text-xs text-[#78716c] mb-3">
+        請輸入您訂票時填寫的「電子信箱 (Email)」或「訂單編號」，即可確認登記結果或取消釋出座位：
+      </p>
+
+      <form id="search-form" class="flex gap-2 mb-4">
+        <input type="text" id="search-input" required placeholder="輸入 Email 或 訂單編號 (如 WB-2026...)" class="flex-1 bg-[#faf8f5] border border-[#d6cbbe] rounded-lg px-3 py-2 text-xs text-[#292524] focus:outline-none focus:border-[#a84c2e]">
+        <button type="submit" class="btn-terracotta px-4 py-2 rounded-lg text-xs font-bold shadow-sm shrink-0">
+          查詢訂單
+        </button>
+      </form>
+
+      <!-- 查詢結果列表 -->
+      <div id="search-results" class="space-y-3">
+        <div class="py-6 text-center text-stone-400 text-xs">
+          請於上方輸入信箱進行查詢
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= 訂購成功收據彈窗 (Success Modal) ================= -->
+  <div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-stone-900/65 backdrop-blur-sm modal-overlay">
+    <div class="bg-[#fffdfa] border-2 border-emerald-300 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center">
+      
+      <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center text-2xl mb-3 shadow-md animate-bounce">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <h3 class="text-lg sm:text-xl font-bold text-[#292524] mb-1">🎉 訂票登記成功！</h3>
+      <p class="text-xs text-[#78716c] mb-4">系統已確認您的座席，請記下訂單資訊方便後續對帳</p>
+
+      <div class="bg-[#faf8f5] rounded-xl p-4 text-left border border-[#e7dfd5] space-y-2 text-xs mb-4">
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">訂單編號：</span>
+          <span id="success-order-id" class="font-mono font-bold text-[#a84c2e]"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">團員姓名：</span>
+          <span id="success-member-name" class="font-bold text-[#292524]"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">電子信箱：</span>
+          <span id="success-email" class="text-[#57534e]"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">劃定位子：</span>
+          <span id="success-seats" class="text-[#292524] font-semibold max-w-[220px] text-right"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">應付金額：</span>
+          <span id="success-final-total" class="font-mono font-black text-[#a84c2e] text-sm"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-[#78716c]">贈送節目冊：</span>
+          <span id="success-booklets" class="font-bold text-[#be185d]"></span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-copy-receipt" class="btn-terracotta flex-1 py-2 rounded-lg text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5">
+          <i class="fas fa-copy"></i> 複製明細傳至 LINE
+        </button>
+        <button data-close-modal="success-modal" class="px-4 py-2 rounded-lg bg-[#f4ede4] hover:bg-[#e7dfd5] text-[#57534e] text-xs font-medium">
+          完成關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引用設定檔、座位矩陣與核心互動邏輯（加上防快取版本號） -->
+  <script src="config.js?v=2.1"></script>
+  <script src="js/seats-data.js?v=2.1"></script>
+  <script src="js/app.js?v=2.1"></script>
+</body>
+</html>
