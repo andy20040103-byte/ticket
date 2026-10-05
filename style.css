@@ -67,16 +67,26 @@ body {
   padding-bottom: 60px;
 }
 
-/* 單一座席按鈕樣式 */
+/* 單一座席按鈕樣式 - 嚴格固定寬高尺寸，防止在任何排或數字下變形或大小不一 */
 .seat-btn {
-  width: 25px;
-  height: 25px;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
   border-radius: 5px 5px 3px 3px;
   font-size: 10px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 1;
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -84,10 +94,10 @@ body {
   cursor: pointer;
 }
 
-.seat-btn:hover:not(.seat-sold):not(.seat-blocked) {
-  transform: translateY(-3px) scale(1.18);
+.seat-btn:hover:not(.seat-sold):not(.seat-blocked):not(.seat-work):not(.seat-unopened) {
+  transform: translateY(-2px) scale(1.15);
   z-index: 20;
-  box-shadow: 0 6px 14px rgba(74, 55, 40, 0.3), inset 0 0 3px rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 10px rgba(74, 55, 40, 0.3), inset 0 0 3px rgba(255, 255, 255, 0.7);
 }
 
 /* 票價等級大地土色美學調色 */
@@ -156,7 +166,7 @@ body {
   font-weight: 900;
 }
 
-/* 攝影席（陶磚紅斜紋＋不開放） */
+/* 攝影席 / 視線受阻席（深紅斜紋＋不開放） */
 .seat-blocked {
   background: repeating-linear-gradient(
     45deg,
@@ -169,6 +179,15 @@ body {
   border-color: #b91c1c !important;
   cursor: not-allowed !important;
   opacity: 0.9;
+}
+
+/* 工作席（沉穩深灰） */
+.seat-work {
+  background: #64748b !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+  cursor: not-allowed !important;
+  opacity: 0.85;
 }
 
 /* 行標籤 */

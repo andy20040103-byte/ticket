@@ -150,21 +150,21 @@ function renderFullTheaterMap() {
 
   // ================= 1. 舞台 (STAGE) =================
   const stageEl = document.createElement("div");
-  stageEl.className = "stage-curve w-[720px] h-12 flex items-center justify-center font-bold tracking-widest text-base mb-2";
+  stageEl.className = "stage-curve w-[1100px] h-12 flex items-center justify-center font-bold tracking-widest text-base mb-2";
   stageEl.innerHTML = `<span class="flex items-center gap-2.5"><i class="fas fa-theater-masks text-amber-300"></i> 舞 台 (STAGE)</span>`;
   wrapper.appendChild(stageEl);
 
   // 1~4 排不開放提示
   const closedRowEl = document.createElement("div");
-  closedRowEl.className = "w-[720px] py-1 text-center bg-stone-200/70 border border-stone-300 text-stone-600 text-xs rounded-lg mb-3 font-medium tracking-wide";
+  closedRowEl.className = "w-[1100px] py-1 text-center bg-stone-200/70 border border-stone-300 text-stone-600 text-xs rounded-lg mb-3 font-medium tracking-wide";
   closedRowEl.textContent = "1 ～ 4 排 不開放（不設席次）";
   wrapper.appendChild(closedRowEl);
 
   // ================= 2. 1樓 觀眾席 (5~18排) =================
   const floor1Title = document.createElement("div");
-  floor1Title.className = "w-[720px] flex items-center justify-between text-xs font-bold text-stone-700 border-b border-stone-300 pb-1 mb-2";
+  floor1Title.className = "w-[1100px] flex items-center justify-between text-xs font-bold text-stone-700 border-b border-stone-300 pb-1 mb-2";
   floor1Title.innerHTML = `
-    <span><i class="fas fa-couch text-amber-700"></i> 1 樓 觀眾席（共 574 席，含工作席）</span>
+    <span><i class="fas fa-couch text-amber-700"></i> 1 樓 觀眾席（5～18排，含攝影席）</span>
     <span class="text-[11px] font-normal text-stone-500">17~18排中央為攝影席（不開放）</span>
   `;
   wrapper.appendChild(floor1Title);
@@ -175,24 +175,24 @@ function renderFullTheaterMap() {
 
     // 左排號
     const leftLabel = document.createElement("div");
-    leftLabel.className = "row-label";
+    leftLabel.className = "row-label flex-shrink-0";
     leftLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(leftLabel);
 
-    // 左區席位
+    // 左區席位 (固定寬度 320px，flex-shrink: 0，單號由外往走道)
     const leftBlock = document.createElement("div");
-    leftBlock.className = "flex items-center justify-end gap-1 w-[220px]";
+    leftBlock.className = "flex items-center justify-end gap-[3px] w-[320px] flex-shrink-0";
     rowObj.left.forEach(seat => leftBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(leftBlock);
 
     // 左走道
     const leftAisle = document.createElement("div");
-    leftAisle.className = "w-4 text-center aisle-label font-mono";
+    leftAisle.className = "w-5 text-center aisle-label font-mono flex-shrink-0";
     rowRow.appendChild(leftAisle);
 
-    // 中央區席位
+    // 中央區席位 (固定寬度 350px，flex-shrink: 0)
     const centerBlock = document.createElement("div");
-    centerBlock.className = "flex items-center justify-center gap-1 w-[350px]";
+    centerBlock.className = "flex items-center justify-center gap-[3px] w-[350px] flex-shrink-0";
     
     // 17、18 排攝影席特殊標記
     if (rowObj.row === 17 || rowObj.row === 18) {
@@ -204,18 +204,18 @@ function renderFullTheaterMap() {
 
     // 右走道
     const rightAisle = document.createElement("div");
-    rightAisle.className = "w-4 text-center aisle-label font-mono";
+    rightAisle.className = "w-5 text-center aisle-label font-mono flex-shrink-0";
     rowRow.appendChild(rightAisle);
 
-    // 右區席位
+    // 右區席位 (固定寬度 320px，flex-shrink: 0，雙號由走道往外)
     const rightBlock = document.createElement("div");
-    rightBlock.className = "flex items-center justify-start gap-1 w-[220px]";
+    rightBlock.className = "flex items-center justify-start gap-[3px] w-[320px] flex-shrink-0";
     rowObj.right.forEach(seat => rightBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(rightBlock);
 
     // 右排號
     const rightLabel = document.createElement("div");
-    rightLabel.className = "row-label";
+    rightLabel.className = "row-label flex-shrink-0";
     rightLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(rightLabel);
 
@@ -224,50 +224,94 @@ function renderFullTheaterMap() {
 
   // ================= 3. 樓層分隔裝飾線 =================
   const divider1 = document.createElement("div");
-  divider1.className = "w-[760px] my-5 border-t-2 border-dashed border-stone-300 relative text-center";
-  divider1.innerHTML = `<span class="bg-[#f4ede4] px-4 text-xs font-bold text-stone-500 uppercase tracking-widest relative -top-2.5">▲ 一樓觀眾席 ｜ 二樓觀眾席 ▼</span>`;
+  divider1.className = "w-[1100px] my-5 border-t-2 border-dashed border-stone-300 relative text-center";
+  divider1.innerHTML = `<span class="bg-[#faf8f5] px-4 text-xs font-bold text-stone-500 uppercase tracking-widest relative -top-2.5">▲ 一樓觀眾席 ｜ 二樓觀眾席 ▼</span>`;
   wrapper.appendChild(divider1);
 
   // ================= 4. 2樓 觀眾席 (2~6排) =================
   const floor2Title = document.createElement("div");
-  floor2Title.className = "w-[720px] flex items-center justify-between text-xs font-bold text-stone-700 border-b border-stone-300 pb-1 mb-2";
+  floor2Title.className = "w-[1100px] flex items-center justify-between text-xs font-bold text-stone-700 border-b border-stone-300 pb-1 mb-2";
   floor2Title.innerHTML = `
-    <span><i class="fas fa-layer-group text-emerald-700"></i> 2 樓 觀眾席（共 173 席，全區草綠色 100 元，不適用折扣）</span>
+    <span><i class="fas fa-layer-group text-emerald-700"></i> 2 樓 觀眾席（共 173 席，含工作席與視線受阻席，草綠色 100 元席不適用折扣）</span>
     <span class="text-[11px] font-normal text-stone-500">2～6排</span>
   `;
   wrapper.appendChild(floor2Title);
 
+  // 2樓輪椅席與特別區 (頂部)
+  if (window.ALL_SEATS_DATA.floor2.specialRow) {
+    const sp = window.ALL_SEATS_DATA.floor2.specialRow;
+    const spRow = document.createElement("div");
+    spRow.className = "flex items-center gap-2 mb-1";
+
+    const leftLabel = document.createElement("div");
+    leftLabel.className = "row-label text-[10px] text-stone-500 flex-shrink-0";
+    leftLabel.textContent = "輪椅";
+    spRow.appendChild(leftLabel);
+
+    const leftBlock = document.createElement("div");
+    leftBlock.className = "flex items-center justify-end gap-[3px] w-[545px] flex-shrink-0";
+    if (sp.wheelchair) {
+      sp.wheelchair.forEach(s => leftBlock.appendChild(createSeatButton(s)));
+    }
+    spRow.appendChild(leftBlock);
+
+    const centerAisle = document.createElement("div");
+    centerAisle.className = "w-8 text-center aisle-label font-mono text-[10px] flex-shrink-0";
+    centerAisle.textContent = "走道";
+    spRow.appendChild(centerAisle);
+
+    const rightBlock = document.createElement("div");
+    rightBlock.className = "flex items-center justify-start gap-[3px] w-[545px] flex-shrink-0";
+    if (sp.vip) {
+      sp.vip.forEach(s => rightBlock.appendChild(createSeatButton(s)));
+    }
+    spRow.appendChild(rightBlock);
+
+    const rightLabel = document.createElement("div");
+    rightLabel.className = "row-label text-[10px] text-stone-500 flex-shrink-0";
+    rightLabel.textContent = "特別區";
+    spRow.appendChild(rightLabel);
+
+    wrapper.appendChild(spRow);
+  }
+
+  // 2樓常規 2~6排
   window.ALL_SEATS_DATA.floor2.forEach(rowObj => {
     const rowRow = document.createElement("div");
     rowRow.className = "flex items-center gap-2";
 
     // 左排號
     const leftLabel = document.createElement("div");
-    leftLabel.className = "row-label";
+    leftLabel.className = "row-label flex-shrink-0";
     leftLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(leftLabel);
 
-    // 左區 (33..1)
+    // 左區
     const leftBlock = document.createElement("div");
-    leftBlock.className = "flex items-center justify-end gap-1 w-[350px]";
+    leftBlock.className = "flex items-center justify-end gap-[3px] w-[545px] flex-shrink-0";
     rowObj.left.forEach(seat => leftBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(leftBlock);
 
-    // 中央大走道
+    // 中央走道 (第6排無中央走道，直接連續)
     const centerAisle = document.createElement("div");
-    centerAisle.className = "w-10 text-center aisle-label font-mono font-medium";
-    centerAisle.textContent = "走道";
+    if (rowObj.row === 6) {
+      centerAisle.className = "w-0 overflow-hidden flex-shrink-0";
+      centerAisle.textContent = "";
+    } else {
+      centerAisle.className = "w-8 text-center aisle-label font-mono font-medium flex-shrink-0";
+      centerAisle.textContent = "走道";
+    }
     rowRow.appendChild(centerAisle);
 
-    // 右區 (2..34)
+    // 右區
     const rightBlock = document.createElement("div");
-    rightBlock.className = "flex items-center justify-start gap-1 w-[350px]";
+    rightBlock.className = "flex items-center justify-start gap-[3px] w-[545px] flex-shrink-0";
     rowObj.right.forEach(seat => rightBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(rightBlock);
 
     // 右排號
     const rightLabel = document.createElement("div");
-    rightLabel.className = "row-label";
+    rightLabel.className = "row-label flex-shrink-0";
     rightLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(rightLabel);
 
@@ -276,8 +320,8 @@ function renderFullTheaterMap() {
 
   // ================= 5. 3樓 觀眾席 (不開放) =================
   const divider2 = document.createElement("div");
-  divider2.className = "w-[760px] my-5 border-t border-stone-300 text-center relative";
-  divider2.innerHTML = `<span class="bg-[#f4ede4] px-4 text-xs font-medium text-stone-400 relative -top-2.5">3 樓 觀眾席（本場次不開放）</span>`;
+  divider2.className = "w-[1100px] my-5 border-t border-stone-300 text-center relative";
+  divider2.innerHTML = `<span class="bg-[#faf8f5] px-4 text-xs font-medium text-stone-400 relative -top-2.5">3 樓 觀眾席（本場次不開放）</span>`;
   wrapper.appendChild(divider2);
 
   window.ALL_SEATS_DATA.floor3.forEach(rowObj => {
@@ -285,27 +329,27 @@ function renderFullTheaterMap() {
     rowRow.className = "flex items-center gap-2 opacity-50";
 
     const leftLabel = document.createElement("div");
-    leftLabel.className = "row-label text-stone-400";
+    leftLabel.className = "row-label text-stone-400 flex-shrink-0";
     leftLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(leftLabel);
 
     const leftBlock = document.createElement("div");
-    leftBlock.className = "flex items-center justify-end gap-1 w-[350px]";
+    leftBlock.className = "flex items-center justify-end gap-[3px] w-[545px] flex-shrink-0";
     rowObj.left.forEach(seat => leftBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(leftBlock);
 
     const centerAisle = document.createElement("div");
-    centerAisle.className = "w-10 text-center aisle-label";
+    centerAisle.className = "w-8 text-center aisle-label flex-shrink-0";
     centerAisle.textContent = "走道";
     rowRow.appendChild(centerAisle);
 
     const rightBlock = document.createElement("div");
-    rightBlock.className = "flex items-center justify-start gap-1 w-[350px]";
+    rightBlock.className = "flex items-center justify-start gap-[3px] w-[545px] flex-shrink-0";
     rowObj.right.forEach(seat => rightBlock.appendChild(createSeatButton(seat)));
     rowRow.appendChild(rightBlock);
 
     const rightLabel = document.createElement("div");
-    rightLabel.className = "row-label text-stone-400";
+    rightLabel.className = "row-label text-stone-400 flex-shrink-0";
     rightLabel.textContent = rowObj.rowLabel;
     rowRow.appendChild(rightLabel);
 
@@ -340,7 +384,11 @@ function createSeatButton(seat) {
     btn.classList.add("seat-unopened");
     btn.title = `3樓 ${seat.row}排 ${seat.seat}號 [不開放]`;
   } else if (isBlocked) {
-    btn.classList.add("seat-blocked");
+    if (seat.blockedReason && seat.blockedReason.includes("工作席")) {
+      btn.classList.add("seat-work");
+    } else {
+      btn.classList.add("seat-blocked");
+    }
     btn.title = `${seat.floor}樓 ${seat.row}排 ${seat.seat}號 [${seat.blockedReason || '不開放'}]`;
   } else if (isSold) {
     btn.classList.add("seat-sold");
@@ -710,21 +758,13 @@ async function handleOrderSubmit(e) {
 
   const memberName = document.getElementById("member-name").value.trim();
   const section = document.getElementById("member-section").value;
-  const email = document.getElementById("member-email").value.trim().toLowerCase();
   const phone = document.getElementById("member-phone").value.trim();
-  const lineId = document.getElementById("member-line").value.trim();
-  const notes = document.getElementById("member-notes").value.trim();
+  const lineName = document.getElementById("member-line") ? document.getElementById("member-line").value.trim() : "";
+  const notes = document.getElementById("member-notes") ? document.getElementById("member-notes").value.trim() : "";
 
-  // 嚴格驗證必填
-  if (!memberName || !section || !email || !phone) {
-    showToast("請確實填寫「姓名」、「聲部」、「電子信箱」與「電話」！", "error");
-    return;
-  }
-
-  // 驗證 Email 格式
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    showToast("請輸入有效的電子信箱格式！", "error");
+  // 嚴格驗證必填（不要求填寫 Email）
+  if (!memberName || !section || !phone) {
+    showToast("請確實填寫「姓名」、「聲部」與「聯絡電話」！", "error");
     return;
   }
 
@@ -750,9 +790,10 @@ async function handleOrderSubmit(e) {
     timestamp: now.toISOString(),
     memberName: memberName,
     section: section,
-    email: email,
+    email: "", // 不需填寫 Gmail
     phone: phone,
-    lineId: lineId,
+    lineName: lineName,
+    lineId: lineName, // 相容欄位
     notes: notes,
     seats: requestedSeatIds,
     seatDetails: seatsArray.map(s => getSeatFriendlyName(s)),
@@ -862,7 +903,10 @@ function triggerConflictAbort(conflictSeatIds) {
 function showSuccessModal(order) {
   document.getElementById("success-order-id").textContent = order.orderId;
   document.getElementById("success-member-name").textContent = `${order.memberName} (${order.section})`;
-  document.getElementById("success-email").textContent = order.email;
+  const phoneEl = document.getElementById("success-phone");
+  if (phoneEl) phoneEl.textContent = order.phone || "";
+  const lineEl = document.getElementById("success-line");
+  if (lineEl) lineEl.textContent = order.lineName || order.lineId || "無";
   document.getElementById("success-seats").textContent = order.seatDetails.join("、");
   document.getElementById("success-final-total").textContent = `$${order.finalTotal.toLocaleString()}`;
   document.getElementById("success-booklets").textContent = `${order.bookletsCount} 本`;
@@ -873,7 +917,8 @@ function showSuccessModal(order) {
       const text = `【管樂團演出團員購票明細】\n` +
         `訂單編號：${order.orderId}\n` +
         `團員：${order.memberName} (${order.section})\n` +
-        `電子信箱：${order.email}\n` +
+        `電話：${order.phone}\n` +
+        `LINE 名稱：${order.lineName || order.lineId || '無'}\n` +
         `座席：${order.seatDetails.join("、")}\n` +
         `實付金額：$${order.finalTotal} 元\n` +
         `贈送節目冊：${order.bookletsCount} 本\n` +
@@ -888,13 +933,13 @@ function showSuccessModal(order) {
 }
 
 /**
- * 訂單查詢處理
+ * 訂單查詢處理（依團員姓名或訂單編號）
  */
 async function handleOrderSearch(e) {
   e.preventDefault();
-  const searchInput = document.getElementById("search-input").value.trim().toLowerCase();
+  const searchInput = document.getElementById("search-input").value.trim();
   if (!searchInput) {
-    showToast("請輸入欲查詢的電子信箱或訂單編號", "warning");
+    showToast("請輸入欲查詢的團員姓名或訂單編號", "warning");
     return;
   }
 
@@ -903,10 +948,10 @@ async function handleOrderSearch(e) {
 
   let matchedOrders = [];
 
-  // 若有串接 GAS，透過 GET API 查詢
+  // 若有串接 GAS，透過 GET API 查詢（支援 name 與 orderId）
   if (state.gasApiUrl) {
     try {
-      const url = `${state.gasApiUrl}?email=${encodeURIComponent(searchInput)}&orderId=${encodeURIComponent(searchInput)}`;
+      const url = `${state.gasApiUrl}?name=${encodeURIComponent(searchInput)}&orderId=${encodeURIComponent(searchInput)}`;
       const resp = await fetch(url);
       const data = await resp.json();
       if (data.status === "success" && Array.isArray(data.orders)) {
@@ -919,9 +964,10 @@ async function handleOrderSearch(e) {
 
   // 若線上無結果，比對本地儲存
   if (matchedOrders.length === 0) {
+    const lowerInput = searchInput.toLowerCase();
     matchedOrders = state.localOrders.filter(o => 
-      (o.email && o.email.toLowerCase() === searchInput) ||
-      (o.orderId && o.orderId.toLowerCase() === searchInput)
+      (o.memberName && (o.memberName.toLowerCase() === lowerInput || o.memberName.includes(searchInput))) ||
+      (o.orderId && o.orderId.toLowerCase() === lowerInput)
     );
   }
 
@@ -940,7 +986,7 @@ function renderSearchResults(orders, queryKeyword) {
       <div class="py-8 text-center text-stone-400 text-xs bg-stone-50 rounded-xl border border-stone-200">
         <i class="fas fa-search text-stone-300 text-3xl mb-2 block"></i>
         查無符合「<span class="font-bold text-stone-600">${queryKeyword}</span>」的有效訂票紀錄。<br>
-        請確認信箱是否與當初填寫時一致。
+        請確認團員姓名或訂單編號是否正確。
       </div>
     `;
     return;
@@ -967,7 +1013,9 @@ function renderSearchResults(orders, queryKeyword) {
 
       <div class="grid grid-cols-2 gap-2 text-stone-600 pt-1">
         <div>團員姓名：<span class="font-bold text-stone-800">${order.memberName}</span> (${order.section})</div>
-        <div>電子信箱：<span class="text-stone-800">${order.email}</span></div>
+        <div>聯絡電話：<span class="text-stone-800">${order.phone || "無"}</span></div>
+        <div>LINE 名稱：<span class="text-stone-800">${order.lineName || order.lineId || "無"}</span></div>
+        <div>訂單張數：<span class="font-bold text-stone-800">${order.seatCount || (order.seats ? order.seats.length : 0)} 席</span></div>
         <div class="col-span-2">劃定位子：<span class="font-bold text-stone-800">${(order.seatDetails || []).join("、")}</span></div>
         <div>實付金額：<span class="font-mono font-black text-amber-700 text-sm">$${(order.finalTotal || 0).toLocaleString()}</span></div>
         <div>附贈節目冊：<span class="font-bold text-pink-700">${order.bookletsCount || 0} 本</span></div>
@@ -999,6 +1047,7 @@ function renderSearchResults(orders, queryKeyword) {
  */
 async function handleCancelOrder(order) {
   const confirmMsg = `確定要取消訂單【${order.orderId}】嗎？\n\n` +
+    `訂位團員：${order.memberName}\n` +
     `購買座位：${(order.seatDetails || []).join("、")}\n` +
     `取消後這些座位將立即重新釋出給其他團員選購！`;
 
@@ -1011,7 +1060,7 @@ async function handleCancelOrder(order) {
   }
 
   try {
-    // 1. 若有 GAS，向後端發送取消請求
+    // 1. 若有 GAS，向後端發送取消請求（使用 memberName 核對）
     if (state.gasApiUrl) {
       const resp = await fetch(state.gasApiUrl, {
         method: "POST",
@@ -1021,7 +1070,7 @@ async function handleCancelOrder(order) {
         body: JSON.stringify({
           action: "cancel_order",
           orderId: order.orderId,
-          email: order.email
+          memberName: order.memberName
         })
       });
 
@@ -1050,17 +1099,20 @@ async function handleCancelOrder(order) {
     updateCartUI();
     showToast(`訂單 ${order.orderId} 已成功取消，座位已重新釋出！`);
 
-    // 重新觸發查詢
-    const searchInput = document.getElementById("search-input").value.trim().toLowerCase();
-    const updatedOrders = state.localOrders.filter(o => 
-      (o.email && o.email.toLowerCase() === searchInput) ||
-      (o.orderId && o.orderId.toLowerCase() === searchInput)
-    );
-    renderSearchResults(updatedOrders, searchInput);
+    // 刷新查詢列表
+    const searchInput = document.getElementById("search-input").value.trim();
+    if (searchInput) {
+      const lowerInput = searchInput.toLowerCase();
+      const updatedOrders = state.localOrders.filter(o => 
+        (o.memberName && (o.memberName.toLowerCase() === lowerInput || o.memberName.includes(searchInput))) ||
+        (o.orderId && o.orderId.toLowerCase() === lowerInput)
+      );
+      renderSearchResults(updatedOrders, searchInput);
+    }
 
   } catch (err) {
-    console.error("取消失敗", err);
-    showToast("取消失敗，請稍後重試或向票務人員回報", "error");
+    console.error("取消訂單處理失敗", err);
+    showToast("取消失敗：" + (err.message || "請檢查網路連線"), "error");
     if (btn) {
       btn.disabled = false;
       btn.innerHTML = `<i class="fas fa-ban"></i> 取消此筆訂單並釋出座位`;
