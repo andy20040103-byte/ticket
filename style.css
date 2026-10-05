@@ -1,0 +1,259 @@
+/* ====================================================
+   管樂團團員售票系統 - 象牙白與大地土色調典雅樣式表
+   大東文化藝術中心演藝廳 1:1 電影院選位介面
+   ==================================================== */
+
+:root {
+  --bg-ivory: #faf8f5;
+  --bg-parchment: #f4ede4;
+  --bg-card: #ffffff;
+  --text-espresso: #292524;
+  --text-muted: #78716c;
+  --border-sand: #e7dfd5;
+  --color-terracotta: #c25e3d;
+  --color-terracotta-hover: #a84c2e;
+  
+  --seat-1000: #be185d;
+  --seat-500: #d97706;
+  --seat-300: #0284c7;
+  --seat-100: #059669;
+  --seat-camera: #991b1b;
+  --seat-sold: #a8a29e;
+  --seat-selected: #b45309;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+  background-color: var(--bg-ivory);
+  color: var(--text-espresso);
+  overflow-x: hidden;
+}
+
+/* 舞台光影效果（溫潤原木與暖黃舞台光） */
+.stage-curve {
+  position: relative;
+  background: linear-gradient(180deg, #78350f 0%, #b45309 60%, rgba(217, 119, 6, 0.15) 100%);
+  border-top: 3px solid #f59e0b;
+  border-radius: 120px 120px 0 0;
+  box-shadow: 0 -10px 25px -5px rgba(217, 119, 6, 0.25);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  color: #fef3c7;
+}
+
+/* 演藝廳總畫布視窗（一二三樓垂直整合） */
+.seating-viewport {
+  position: relative;
+  width: 100%;
+  min-height: 580px;
+  max-height: 720px;
+  overflow: auto;
+  cursor: grab;
+  user-select: none;
+  background: radial-gradient(circle at 50% 15%, #ffffff 0%, #f4ede4 100%);
+  border-radius: 16px;
+  border: 1px solid var(--border-sand);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04), 0 10px 25px -5px rgba(74, 55, 40, 0.08);
+}
+
+.seating-viewport:active {
+  cursor: grabbing;
+}
+
+.seating-pan-zoom {
+  transform-origin: 50% 0%;
+  transition: transform 0.15s ease-out;
+  display: inline-block;
+  min-width: 100%;
+  padding-bottom: 60px;
+}
+
+/* 單一座席按鈕樣式 */
+.seat-btn {
+  width: 25px;
+  height: 25px;
+  border-radius: 5px 5px 3px 3px;
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 2px 3px rgba(74, 55, 40, 0.15);
+  cursor: pointer;
+}
+
+.seat-btn:hover:not(.seat-sold):not(.seat-blocked) {
+  transform: translateY(-3px) scale(1.18);
+  z-index: 20;
+  box-shadow: 0 6px 14px rgba(74, 55, 40, 0.3), inset 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
+/* 票價等級大地土色美學調色 */
+.seat-1000 {
+  background: linear-gradient(180deg, #db2777 0%, #9d174d 100%);
+  color: #ffffff;
+}
+
+.seat-500 {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+  color: #ffffff;
+}
+
+.seat-300 {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+}
+
+.seat-100 {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+  color: #ffffff;
+}
+
+/* 3樓未開放灰階席 */
+.seat-unopened {
+  background: #e7dfd5 !important;
+  color: #a8a29e !important;
+  border-color: #d6cbbe !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* 已選取席位狀態（焦糖陶土高亮＋金黃脈衝邊框） */
+.seat-selected {
+  background: linear-gradient(180deg, #c25e3d 0%, #9e4428 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #fef08a !important;
+  box-shadow: 0 0 12px rgba(194, 94, 61, 0.8), inset 0 0 4px rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-2px) scale(1.15);
+  z-index: 10;
+  animation: pulse-border 1.8s infinite;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 6px rgba(194, 94, 61, 0.6); }
+  50% { box-shadow: 0 0 14px rgba(245, 158, 11, 0.9); }
+  100% { box-shadow: 0 0 6px rgba(194, 94, 61, 0.6); }
+}
+
+/* 已售出 / 已保留席位 */
+.seat-sold {
+  background: #d6cbbe !important;
+  color: #78716c !important;
+  border-color: #b8aea0 !important;
+  cursor: not-allowed !important;
+  opacity: 0.65;
+  position: relative;
+  box-shadow: none !important;
+}
+
+.seat-sold::after {
+  content: "✕";
+  font-size: 11px;
+  position: absolute;
+  color: #57534e;
+  font-weight: 900;
+}
+
+/* 攝影席（陶磚紅斜紋＋不開放） */
+.seat-blocked {
+  background: repeating-linear-gradient(
+    45deg,
+    #991b1b,
+    #991b1b 3px,
+    #7f1d1d 3px,
+    #7f1d1d 6px
+  ) !important;
+  color: #fecaca !important;
+  border-color: #b91c1c !important;
+  cursor: not-allowed !important;
+  opacity: 0.9;
+}
+
+/* 行標籤 */
+.row-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #78716c;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* 走道標示 */
+.aisle-label {
+  color: #a8a29e;
+  font-size: 10px;
+  letter-spacing: 1px;
+  user-select: none;
+}
+
+/* 自訂滑動捲軸 */
+.seating-viewport::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+.seating-viewport::-webkit-scrollbar-track {
+  background: #f4ede4;
+}
+.seating-viewport::-webkit-scrollbar-thumb {
+  background: #d6cbbe;
+  border-radius: 5px;
+}
+.seating-viewport::-webkit-scrollbar-thumb:hover {
+  background: #b8aea0;
+}
+
+/* 浮動提示框 Tooltip */
+#seat-tooltip {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  background: rgba(41, 37, 36, 0.94);
+  border: 1px solid rgba(231, 223, 213, 0.3);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #faf8f5;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+  display: none;
+  transform: translate(-50%, -120%);
+  white-space: nowrap;
+}
+
+/* 票券標籤徽章 */
+.ticket-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 6px;
+}
+
+/* 陶土色主要按鈕 */
+.btn-terracotta {
+  background-color: var(--color-terracotta);
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+.btn-terracotta:hover:not(:disabled) {
+  background-color: var(--color-terracotta-hover);
+  box-shadow: 0 4px 14px rgba(194, 94, 61, 0.35);
+}
+.btn-terracotta:disabled {
+  background-color: #d6cbbe;
+  color: #a8a29e;
+  cursor: not-allowed;
+}
+
+/* 模態彈窗過場 */
+.modal-overlay {
+  transition: opacity 0.25s ease-out;
+}
+.modal-content {
+  transition: transform 0.25s ease-out;
+}
